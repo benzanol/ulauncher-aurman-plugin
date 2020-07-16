@@ -1,0 +1,68 @@
+from ulauncher.api.client.Extension import Extension
+from ulauncher.api.client.EventListener import EventListener
+from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
+from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
+from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
+from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
+from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
+import requests
+import subprocess
+
+#Proxies = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
+
+
+class Extension(Extension):
+
+    def __init__(self):
+        super(Extension, self).__init__()
+        self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
+
+
+class KeywordQueryEventListener(EventListener):
+    def on_event(self, event, extension):
+        query = event.get_argument() or str()
+        if len(query.strip()) == 0:
+            return RenderResultListAction([
+                ExtensionResultItem(icon='images/icon.png',
+                                    name='No input',
+                                    on_enter=HideWindowAction())
+            ])
+        else:
+            data = subprocess.Popen(["aurman", "-Ss", str(query)], stdout = subprocess.PIPE)
+            cmd = str(data.communicate())
+
+            packages = [] # List of packages
+            pkg_num = 0 # Number of packages
+            i = 3 # Character index
+            while i < len(cmd):
+                packages.append([])
+                name = ""
+                description = ""
+                while i < len(cmd) and cmd[i] != ' ':
+                    name += cmd[i]
+                    i += 1
+                while i < len(cmd) and cmd[i] != '\\':
+                    i += 1
+                i += 6
+                while i < len(cmd) and cmd[i] != '\\':
+                    description += cmd[i]
+                    i += 1
+                packages[pkg_num].append(name)
+                packages[pkg_num].append(description)
+                pkg_num += 1
+                i += 2
+
+            del packages[len(packages) - 1]
+
+            items = []
+            for q in packages:
+                items.append(ExtensionResultItem(icon='images/icon.png',
+                                                 name=q[0],
+                                                 description=q[1],
+                                                 on_enter=OpenUrlAction("https://www.google.com")))
+
+            return RenderResultListAction(items)
+
+
+if __name__ == '__main__':
+    Extension().run()

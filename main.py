@@ -24,7 +24,7 @@ class KeywordQueryEventListener(EventListener):
         query = event.get_argument() or str()
         if len(query.strip()) == 0:
             return RenderResultListAction([
-                ExtensionResultItem(icon='images/icon.png',
+                ExtensionResultItem(icon='icon.png',
                                     name='No input',
                                     on_enter=HideWindowAction())
             ])
@@ -63,7 +63,7 @@ class KeywordQueryEventListener(EventListener):
 
             items = []
             for q in packages:
-                items.append(ExtensionResultItem(icon='images/icon.png',
+                items.append(ExtensionResultItem(icon='icon.png',
                                                  name=q[0] + "  (" + q[2] + ")",
                                                  description=q[1],
                                                  on_enter=CopyToClipboardAction("aurman -S " + q[0])))

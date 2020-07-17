@@ -4,9 +4,10 @@ from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
-from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
+from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
 import requests
 import subprocess
+import os
 
 #Proxies = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
@@ -36,8 +37,13 @@ class KeywordQueryEventListener(EventListener):
             i = 3 # Character index
             while i < len(cmd):
                 packages.append([])
+                repo = ""
                 name = ""
                 description = ""
+                while i < len(cmd) and cmd[i] != '/':
+                    repo += cmd[i]
+                    i += 1
+                i += 1
                 while i < len(cmd) and cmd[i] != ' ':
                     name += cmd[i]
                     i += 1
@@ -49,6 +55,7 @@ class KeywordQueryEventListener(EventListener):
                     i += 1
                 packages[pkg_num].append(name)
                 packages[pkg_num].append(description)
+                packages[pkg_num].append(repo)
                 pkg_num += 1
                 i += 2
 
@@ -57,9 +64,9 @@ class KeywordQueryEventListener(EventListener):
             items = []
             for q in packages:
                 items.append(ExtensionResultItem(icon='images/icon.png',
-                                                 name=q[0],
+                                                 name=q[0] + "  (" + q[2] + ")",
                                                  description=q[1],
-                                                 on_enter=OpenUrlAction("https://www.google.com")))
+                                                 on_enter=CopyToClipboardAction("aurman -S " + q[0])))
 
             return RenderResultListAction(items)
 

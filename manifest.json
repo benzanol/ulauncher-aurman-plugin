@@ -1,6 +1,6 @@
 {
     "required_api_version": "^2.0.0",
-    "name": "Aurman Search",
+    "name": "Arch Package Search",
     "description": "Search for packages in Arch Linux",
     "developer_name": "Adam Tillou",
     "icon": "icon.png",
@@ -11,7 +11,7 @@
         {
             "id": "keyword",
             "type": "keyword",
-            "name": "Aurman",
+            "name": "Arch Package Search",
             "default_value": "pkg"
         }
     ]

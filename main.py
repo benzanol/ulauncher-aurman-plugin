@@ -63,10 +63,16 @@ class KeywordQueryEventListener(EventListener):
 
             items = []
             for q in packages:
-                items.append(ExtensionResultItem(icon='icon.png',
-                                                 name=q[0] + "  (" + q[2] + ")",
-                                                 description=q[1],
-                                                 on_enter=CopyToClipboardAction("aurman -S " + q[0])))
+                if q[2] == "aur":
+                    items.append(ExtensionResultItem(icon='icon.png',
+                                                     name=q[0] + "  (" + q[2] + ")",
+                                                     description=q[1],
+                                                     on_enter=CopyToClipboardAction("aurman -S " + q[0])))
+                else:
+                    items.append(ExtensionResultItem(icon='icon.png',
+                                                     name=q[0] + "  (" + q[2] + ")",
+                                                     description=q[1],
+                                                     on_enter=CopyToClipboardAction("sudo pacman -S " + q[0])))
 
             return RenderResultListAction(items)
 

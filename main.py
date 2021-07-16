@@ -35,7 +35,7 @@ class KeywordQueryEventListener(EventListener):
             packages = [] # List of packages
             pkg_num = 0 # Number of packages
             i = 3 # Character index
-            while i < len(cmd):
+            while i < len(cmd) and len(packages) <= 20:
                 packages.append([])
                 repo = ""
                 name = ""

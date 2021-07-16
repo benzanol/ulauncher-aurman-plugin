@@ -29,7 +29,7 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=HideWindowAction())
             ])
         else:
-            data = subprocess.Popen(["aurman", "-Ss", str(query)], stdout = subprocess.PIPE)
+            data = subprocess.Popen(["yay", "-Ss", str(query)], stdout = subprocess.PIPE)
             cmd = str(data.communicate())
 
             packages = [] # List of packages
@@ -67,7 +67,7 @@ class KeywordQueryEventListener(EventListener):
                     items.append(ExtensionResultItem(icon='icon.png',
                                                      name=q[0] + "  (" + q[2] + ")",
                                                      description=q[1],
-                                                     on_enter=CopyToClipboardAction("aurman -S " + q[0])))
+                                                     on_enter=CopyToClipboardAction("yay -S " + q[0])))
                 else:
                     items.append(ExtensionResultItem(icon='icon.png',
                                                      name=q[0] + "  (" + q[2] + ")",
